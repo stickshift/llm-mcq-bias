@@ -17,20 +17,24 @@ def gpt_4o_mini(*, prompt: str, options: dict | None = None) -> str:
     model = "gpt-4o-mini"
 
     client = OpenAI()
-    response = client.chat.completions.create(
-        model=model,
-        messages=[
-            {
-                "role": "user",
-                "content": prompt,
-            },
-        ],
-        **options,
-    )
 
-    logger.debug(f"OpenAI Response: {response}")
+    try:
+        response = client.chat.completions.create(
+            model=model,
+            messages=[
+                {
+                    "role": "user",
+                    "content": prompt,
+                },
+            ],
+            **options,
+        )
 
-    # Parse answer
-    answer = response.choices[0].message.content
+        logger.debug(f"OpenAI Response: {response}")
 
-    return answer
+        # Parse answer
+        answer = response.choices[0].message.content
+
+        return answer
+    finally:
+        client.close()
