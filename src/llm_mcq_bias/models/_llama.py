@@ -10,7 +10,6 @@ logger = logging.getLogger(__name__)
 
 
 def llama_323b(*, prompt: str, options: dict | None = None) -> str:
-
     # llama 3.2 3B
     model = "llama3.2:3b-instruct-fp16"
 

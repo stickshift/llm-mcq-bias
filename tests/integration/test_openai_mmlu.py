@@ -11,7 +11,6 @@ logger = logging.getLogger(__name__)
 
 
 def test_gpt_4o_mini(datasets_path: Path):
-
     #
     # Givens
     #
@@ -80,7 +79,9 @@ def test_gpt_4o_mini(datasets_path: Path):
     error_rate = errors / n_questions
     rps = 1000000000 * n_questions / duration
 
-    logger.info(f"Metrics: total {n_questions}, correct {correct}, errors {errors}, duration {duration}, accuracy {accuracy}, error_rate {error_rate}, rps {rps}")
+    logger.info(
+        f"Metrics: total {n_questions}, correct {correct}, errors {errors}, duration {duration}, accuracy {accuracy}, error_rate {error_rate}, rps {rps}"
+    )
 
     #
     # Thens

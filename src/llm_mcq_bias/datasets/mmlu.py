@@ -82,7 +82,9 @@ def normalize_question_answers(questions: DataFrame):
     normalized = None
     segment_size = int(n_questions / chunk_size)
     for i, option in enumerate(OPTIONS):
-        segment = swap_options(questions.iloc[i * segment_size:(i + 1) * segment_size], option)
+        segment = swap_options(
+            questions.iloc[i * segment_size : (i + 1) * segment_size], option
+        )
         normalized = segment if normalized is None else pd.concat([normalized, segment])
 
     # Shuffle
@@ -98,15 +100,18 @@ def normalize_example_answers(examples: DataFrame):
     # Select 4 examples per category
     normalized = None
     for category in categories:
-
         # Select 4 examples
         selection = examples[examples.category == category].sample(n=4)
 
         # Move 25% of answers to each option
         segment_size = 1
         for i, option in enumerate(OPTIONS):
-            segment = swap_options(selection.iloc[i * segment_size:(i + 1) * segment_size], option)
-            normalized = segment if normalized is None else pd.concat([normalized, segment])
+            segment = swap_options(
+                selection.iloc[i * segment_size : (i + 1) * segment_size], option
+            )
+            normalized = (
+                segment if normalized is None else pd.concat([normalized, segment])
+            )
 
     # Shuffle
     normalized = normalized.sample(frac=1).reset_index(drop=True)
@@ -135,12 +140,14 @@ def generate_prompt(example_questions: DataFrame, mcq: Series):
             f"C) {row.C}\n"
             f"D) {row.D}\n"
             f"\n"
-            f"Example Answer: {{\"answer\": \"{row.answer}\"}}\n"
+            f'Example Answer: {{"answer": "{row.answer}"}}\n'
             f"\n"
         )
 
     # Pose question
-    content += f"Given the examples above, your task is to answer the following question.\n\n"
+    content += (
+        "Given the examples above, your task is to answer the following question.\n\n"
+    )
     content += (
         f"Question: {mcq.question}\n"
         f"\n"
@@ -164,11 +171,9 @@ class Evaluation(StrEnum):
 def evaluate_response(mcq: Series, response: str) -> Evaluation:
     """Evaluate response for specified question."""
 
-    correct, errors = 0, 0
-
     try:
         # Strip text leading up to first { and after last }
-        response = response[response.index("{"):response.rindex("}") + 1]
+        response = response[response.index("{") : response.rindex("}") + 1]
 
         # Parse answer
         answer = json.loads(response)["answer"]
@@ -179,7 +184,7 @@ def evaluate_response(mcq: Series, response: str) -> Evaluation:
         if answer == mcq.answer:
             return Evaluation.CORRECT
 
-    except Exception as e:
+    except Exception:
         # logger.error(f"Error: {e}")
         return Evaluation.ERROR
 

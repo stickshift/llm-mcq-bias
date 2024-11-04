@@ -7,9 +7,7 @@ from pandas.testing import assert_frame_equal
 import llm_mcq_bias as lmb
 
 
-
 def test_load_example_questions(datasets_path: Path):
-
     #
     # Whens
     #
@@ -29,7 +27,6 @@ def test_load_example_questions(datasets_path: Path):
 
 
 def test_load_test_questions(datasets_path: Path):
-
     #
     # Whens
     #
@@ -45,7 +42,15 @@ def test_load_test_questions(datasets_path: Path):
     assert questions.index.is_unique
 
     # questions columns should be "category", "question", "A", "B", "C", "D", "answer"
-    assert set(questions.columns) == {"category", "question", "A", "B", "C", "D", "answer"}
+    assert set(questions.columns) == {
+        "category",
+        "question",
+        "A",
+        "B",
+        "C",
+        "D",
+        "answer",
+    }
 
     # questions should include questions from "elementary_mathematics" category
     assert len(questions.query("category == 'elementary mathematics'")) > 0
@@ -55,7 +60,6 @@ def test_load_test_questions(datasets_path: Path):
 
 
 def test_generate_prompt(datasets_path: Path):
-
     #
     # Givens
     #
@@ -145,7 +149,6 @@ def test_generate_prompt(datasets_path: Path):
 
 
 def test_golden_option(datasets_path: Path):
-
     #
     # Givens
     #
@@ -161,7 +164,9 @@ def test_golden_option(datasets_path: Path):
     #
 
     # I load mmlu dataset with golden option
-    dataset2 = lmb.datasets.mmlu.load_dataset(datasets_path, golden_option=golden_option)
+    dataset2 = lmb.datasets.mmlu.load_dataset(
+        datasets_path, golden_option=golden_option
+    )
 
     #
     # Thens
@@ -176,7 +181,6 @@ def test_golden_option(datasets_path: Path):
 
 
 def test_idempotent_datasets(datasets_path: Path):
-
     #
     # Whens
     #

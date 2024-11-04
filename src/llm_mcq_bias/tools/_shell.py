@@ -73,7 +73,9 @@ async def shell(
     env: Mapping | None = None,
 ) -> str | dict:
     """Runs shell command and returns output."""
-    it = shell_it(cmd, raise_on_error=raise_on_error, capture_stderr=capture_stderr, env=env)
+    it = shell_it(
+        cmd, raise_on_error=raise_on_error, capture_stderr=capture_stderr, env=env
+    )
 
     output_lines = []
     async for line in it:

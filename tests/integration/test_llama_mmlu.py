@@ -11,7 +11,6 @@ logger = logging.getLogger(__name__)
 
 
 def test_ollama_323b(datasets_path: Path):
-
     #
     # Givens
     #
@@ -31,7 +30,10 @@ def test_ollama_323b(datasets_path: Path):
     }
 
     # I warmed up model
-    generator(prompt="What is the capital of Massachusetts? Answer in one word.", options=options)
+    generator(
+        prompt="What is the capital of Massachusetts? Answer in one word.",
+        options=options,
+    )
 
     # n_questions = 20
     n_questions = 20
@@ -81,7 +83,9 @@ def test_ollama_323b(datasets_path: Path):
     error_rate = errors / n_questions
     rps = 1000000000 * n_questions / duration
 
-    logger.info(f"Metrics: total {n_questions}, correct {correct}, errors {errors}, duration {duration}, accuracy {accuracy}, error_rate {error_rate}, rps {rps}")
+    logger.info(
+        f"Metrics: total {n_questions}, correct {correct}, errors {errors}, duration {duration}, accuracy {accuracy}, error_rate {error_rate}, rps {rps}"
+    )
 
     #
     # Thens

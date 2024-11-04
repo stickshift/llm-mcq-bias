@@ -10,7 +10,6 @@ logger = logging.getLogger(__name__)
 
 
 def gpt_4o_mini(*, prompt: str, options: dict | None = None) -> str:
-
     # Defaults
     options = options if options is not None else {}
 
@@ -26,7 +25,7 @@ def gpt_4o_mini(*, prompt: str, options: dict | None = None) -> str:
                 "content": prompt,
             },
         ],
-        **options
+        **options,
     )
 
     logger.debug(f"OpenAI Response: {response}")
