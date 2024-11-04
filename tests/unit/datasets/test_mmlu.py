@@ -66,12 +66,15 @@ def test_generate_prompt(datasets_path: Path):
     # I loaded test questions
     test_questions = lmb.datasets.mmlu.load_dataset(datasets_path, segment="test")
 
+    # I selected question 11776
+    mcq = test_questions.loc[11776]
+
     #
     # Whens
     #
 
     # I generate prompt for question 11776
-    prompt = lmb.datasets.mmlu.generate_prompt(example_questions, test_questions, 11776)
+    prompt = lmb.datasets.mmlu.generate_prompt(example_questions, mcq)
 
     #
     # Thens

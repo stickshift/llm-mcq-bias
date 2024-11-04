@@ -10,7 +10,7 @@ from llm_mcq_bias.datasets.mmlu import Evaluation
 logger = logging.getLogger(__name__)
 
 
-def test_ollama_323b(datasets_path: Path):
+def test_gpt_4o_mini(datasets_path: Path):
 
     #
     # Givens
@@ -22,16 +22,15 @@ def test_ollama_323b(datasets_path: Path):
     # I loaded test questions
     questions = lmb.datasets.mmlu.load_dataset(datasets_path, segment="test")
 
-    # I selected llama 3.2 3B model
-    generator = lmb.models.llama_323b
+    # I selected gpt 4o mini model
+    generator = lmb.models.gpt_4o_mini
 
     # We limit generated tokens to mitigate extra time consumed by invalid responses
     options = {
-        "num_predict": 10,
+        "max_tokens": 10,
+        "temperature": 0.0,
+        "top_p": 1.0,
     }
-
-    # I warmed up model
-    generator(prompt="What is the capital of Massachusetts? Answer in one word.", options=options)
 
     # n_questions = 20
     n_questions = 20

@@ -1,15 +1,25 @@
+from enum import StrEnum
+import json
+import logging
 from pathlib import Path
 
 import pandas as pd
-from pandas import DataFrame
+from pandas import DataFrame, Series
 
 __all__ = [
+    "OPTIONS",
     "load_dataset",
     "swap_options",
+    "normalize_question_answers",
+    "normalize_example_answers",
     "generate_prompt",
+    "Evaluation",
+    "evaluate_response",
 ]
 
-_options = {"A", "B", "C", "D"}
+OPTIONS = {"A", "B", "C", "D"}
+
+logger = logging.getLogger(__name__)
 
 
 def load_dataset(
@@ -46,7 +56,7 @@ def load_dataset(
 
 def swap_options(questions: DataFrame, option: str) -> DataFrame:
     # Validate options
-    if option not in _options:
+    if option not in OPTIONS:
         raise ValueError(f"Invalid option: {option}")
 
     rows = []
@@ -60,15 +70,55 @@ def swap_options(questions: DataFrame, option: str) -> DataFrame:
     return DataFrame(rows)
 
 
-def generate_prompt(example_questions, test_questions, index):
+def normalize_question_answers(questions: DataFrame):
+    """Evenly distribute question answers across options."""
+    chunk_size = len(OPTIONS)
+
+    # Select maximal subset of questions that is multiple of chunk size
+    n_questions = chunk_size * (len(questions) // chunk_size)
+    questions = questions.sample(n=n_questions)
+
+    # Move 25% of answers to each option
+    normalized = None
+    segment_size = int(n_questions / chunk_size)
+    for i, option in enumerate(OPTIONS):
+        segment = swap_options(questions.iloc[i * segment_size:(i + 1) * segment_size], option)
+        normalized = segment if normalized is None else pd.concat([normalized, segment])
+
+    # Shuffle
+    normalized = normalized.sample(frac=1).reset_index(drop=True)
+
+    return normalized
+
+
+def normalize_example_answers(examples: DataFrame):
+    """Evenly distribute example answers across options."""
+    categories = examples.category.unique()
+
+    # Select 4 examples per category
+    normalized = None
+    for category in categories:
+
+        # Select 4 examples
+        selection = examples[examples.category == category].sample(n=4)
+
+        # Move 25% of answers to each option
+        segment_size = 1
+        for i, option in enumerate(OPTIONS):
+            segment = swap_options(selection.iloc[i * segment_size:(i + 1) * segment_size], option)
+            normalized = segment if normalized is None else pd.concat([normalized, segment])
+
+    # Shuffle
+    normalized = normalized.sample(frac=1).reset_index(drop=True)
+
+    return normalized
+
+
+def generate_prompt(example_questions: DataFrame, mcq: Series):
     """Generate prompt for specified question."""
-    mcq = test_questions.loc[index]
 
     # Select examples for category
     selected_examples = example_questions[example_questions.category == mcq.category]
-
-    # Sanity check
-    assert len(selected_examples) == 5
 
     # Start with examples
     content = (
@@ -103,3 +153,34 @@ def generate_prompt(example_questions, test_questions, index):
     )
 
     return content
+
+
+class Evaluation(StrEnum):
+    CORRECT = "correct"
+    INCORRECT = "incorrect"
+    ERROR = "error"
+
+
+def evaluate_response(mcq: Series, response: str) -> Evaluation:
+    """Evaluate response for specified question."""
+
+    correct, errors = 0, 0
+
+    try:
+        # Strip text leading up to first { and after last }
+        response = response[response.index("{"):response.rindex("}") + 1]
+
+        # Parse answer
+        answer = json.loads(response)["answer"]
+        if answer not in OPTIONS:
+            raise ValueError(f"Invalid answer: {answer}")
+
+        # Check answer
+        if answer == mcq.answer:
+            return Evaluation.CORRECT
+
+    except Exception as e:
+        # logger.error(f"Error: {e}")
+        return Evaluation.ERROR
+
+    return Evaluation.INCORRECT
