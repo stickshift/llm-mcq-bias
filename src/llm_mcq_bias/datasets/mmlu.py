@@ -35,7 +35,9 @@ def load_dataset(
     dataset = None
     column_names = ["question", "A", "B", "C", "D", "answer"]
 
-    for path in datasets_path.glob(f"mmlu/{segment}/*.csv"):
+    # Sort paths to ensure consistent order
+    paths = sorted([path for path in datasets_path.glob(f"mmlu/{segment}/*.csv")])
+    for path in paths:
         df = pd.read_csv(path, names=column_names)
 
         # Infer category from file name: x_y_z_test.csv -> x y z
