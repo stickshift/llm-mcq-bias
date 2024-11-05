@@ -64,4 +64,3 @@ def test_text_generation_gpt_4o_mini():
 
     # The answer should be "Boston"
     assert answer == "Boston"
-
