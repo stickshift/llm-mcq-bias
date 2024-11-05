@@ -927,6 +927,8 @@ dependencies = [
     { name = "openai" },
     { name = "pandas" },
     { name = "rich" },
+    { name = "seaborn" },
+    { name = "stamina" },
     { name = "torch" },
     { name = "transformers" },
 ]
@@ -950,6 +952,8 @@ requires-dist = [
     { name = "openai", specifier = ">=1.53.0" },
     { name = "pandas", specifier = ">=2.2.3" },
     { name = "rich", specifier = ">=13.9.4" },
+    { name = "seaborn", specifier = ">=0.13.2" },
+    { name = "stamina", specifier = ">=24.3.0" },
     { name = "torch", specifier = ">=2.5.1" },
     { name = "transformers", specifier = ">=4.46.1" },
 ]
@@ -2006,6 +2010,20 @@ wheels = [
 ]
 
 [[package]]
+name = "seaborn"
+version = "0.13.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "matplotlib" },
+    { name = "numpy" },
+    { name = "pandas" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/86/59/a451d7420a77ab0b98f7affa3a1d78a313d2f7281a57afb1a34bae8ab412/seaborn-0.13.2.tar.gz", hash = "sha256:93e60a40988f4d65e9f4885df477e2fdaff6b73a9ded434c1ab356dd57eefff7", size = 1457696 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/83/11/00d3c3dfc25ad54e731d91449895a79e4bf2384dc3ac01809010ba88f6d5/seaborn-0.13.2-py3-none-any.whl", hash = "sha256:636f8336facf092165e27924f223d3c62ca560b1f2bb5dff7ab7fad265361987", size = 294914 },
+]
+
+[[package]]
 name = "send2trash"
 version = "1.8.3"
 source = { registry = "https://pypi.org/simple" }
@@ -2065,6 +2083,18 @@ wheels = [
 ]
 
 [[package]]
+name = "stamina"
+version = "24.3.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "tenacity" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/c8/35/afe1f3467e840f414cfea90993c5a94490a6360eb3653236c3a7de099cf6/stamina-24.3.0.tar.gz", hash = "sha256:1d763c98962ca11f1729c357422926a750a138e803e7beb9f9d6c99d33d9997d", size = 558536 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/7d/81/818b0b93812cc0a69a0b17c591dca1a3779aeab7f0ff094dee51f4a6bcd3/stamina-24.3.0-py3-none-any.whl", hash = "sha256:28caf1a5db514256d86e32b60621630552fa9a60dace4e6fb5c78ba15f26236e", size = 16445 },
+]
+
+[[package]]
 name = "sympy"
 version = "1.13.1"
 source = { registry = "https://pypi.org/simple" }
@@ -2074,6 +2104,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/ca/99/5a5b6f19ff9f083671ddf7b9632028436167cd3d33e11015754e41b249a4/sympy-1.13.1.tar.gz", hash = "sha256:9cebf7e04ff162015ce31c9c6c9144daa34a93bd082f54fd8f12deca4f47515f", size = 7533040 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/b2/fe/81695a1aa331a842b582453b605175f419fe8540355886031328089d840a/sympy-1.13.1-py3-none-any.whl", hash = "sha256:db36cdc64bf61b9b24578b6f7bab1ecdd2452cf008f34faa33776680c26d66f8", size = 6189177 },
+]
+
+[[package]]
+name = "tenacity"
+version = "9.0.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/cd/94/91fccdb4b8110642462e653d5dcb27e7b674742ad68efd146367da7bdb10/tenacity-9.0.0.tar.gz", hash = "sha256:807f37ca97d62aa361264d497b0e31e92b8027044942bfa756160d908320d73b", size = 47421 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/b6/cb/b86984bed139586d01532a587464b5805f12e397594f19f931c4c2fbfa61/tenacity-9.0.0-py3-none-any.whl", hash = "sha256:93de0c98785b27fcf659856aa9f54bfbd399e29969b0621bc7f762bd441b4539", size = 28169 },
 ]
 
 [[package]]
