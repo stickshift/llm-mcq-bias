@@ -4,19 +4,16 @@ from openai import OpenAI, RateLimitError
 import stamina
 
 __all__ = [
-    "gpt_4o_mini",
+    "openai",
 ]
 
 logger = logging.getLogger(__name__)
 
 
 @stamina.retry(on=RateLimitError, attempts=None, timeout=300)
-def gpt_4o_mini(*, prompt: str, options: dict | None = None) -> str:
+def openai(*, model: str, prompt: str, options: dict | None = None) -> str:
     # Defaults
     options = options if options is not None else {}
-
-    # openai_gpt_4o_mini
-    model = "gpt-4o-mini"
 
     client = OpenAI()
 
@@ -32,7 +29,7 @@ def gpt_4o_mini(*, prompt: str, options: dict | None = None) -> str:
             **options,
         )
 
-        logger.debug(f"OpenAI Response: {response}")
+        logger.debug(f"Response: {response}")
 
         # Parse answer
         answer = response.choices[0].message.content

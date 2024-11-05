@@ -1,7 +1,10 @@
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import logging
+from functools import partial
 from pathlib import Path
 from time import perf_counter_ns as timer
+
+import pytest
 
 import llm_mcq_bias as lmb
 from llm_mcq_bias.datasets.mmlu import Evaluation
@@ -10,7 +13,14 @@ from llm_mcq_bias.datasets.mmlu import Evaluation
 logger = logging.getLogger(__name__)
 
 
-def test_gpt_4o_mini(datasets_path: Path):
+models = [
+    "gpt-4o",
+    "gpt-4o-mini",
+]
+
+
+@pytest.mark.parametrize("model", models)
+def test_mmlu(datasets_path: Path, model: str):
     #
     # Givens
     #
@@ -21,8 +31,8 @@ def test_gpt_4o_mini(datasets_path: Path):
     # I loaded test questions
     questions = lmb.datasets.mmlu.load_dataset(datasets_path, segment="test")
 
-    # I selected gpt 4o mini model
-    generator = lmb.models.gpt_4o_mini
+    # Sample size is 20
+    n_questions = 20
 
     # We limit generated tokens to mitigate extra time consumed by invalid responses
     options = {
@@ -31,8 +41,8 @@ def test_gpt_4o_mini(datasets_path: Path):
         "top_p": 1.0,
     }
 
-    # n_questions = 20
-    n_questions = 20
+    # I packaged model and options into openai generator
+    generator = partial(lmb.models.openai, model=model, options=options)
 
     #
     # Whens
@@ -53,12 +63,10 @@ def test_gpt_4o_mini(datasets_path: Path):
         prompt = lmb.datasets.mmlu.generate_prompt(examples, mcq)
 
         # Generate answer
-        response = generator(prompt=prompt, options=options)
+        response = generator(prompt=prompt)
 
         # Evaluate response
-        evaluation = lmb.datasets.mmlu.evaluate_response(mcq, response)
-
-        return evaluation
+        return lmb.datasets.mmlu.evaluate_response(mcq, response)
 
     futures = [executor.submit(process_mcq, mcq) for _, mcq in questions.iterrows()]
 
