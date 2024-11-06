@@ -1,5 +1,11 @@
-from ._llama import llama_323b
+from ._ollama import ollama
+from ._openai import openai
+from ._generator import Generator
+from ._hf import hf
 
 __all__ = [
-    "llama_323b",
+    "Generator",
+    "ollama",
+    "openai",
+    "hf",
 ]

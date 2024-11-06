@@ -23,6 +23,7 @@ project_variables=(
   VERSION
   PY_VERSION
   SOURCE_DATE_EPOCH
+  OPENAI_API_KEY
 )
 
 for v in "${project_variables[@]}"; do

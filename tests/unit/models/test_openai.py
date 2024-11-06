@@ -5,11 +5,11 @@ import pytest
 import llm_mcq_bias as lmb
 
 models = [
-    "llama3.2:3b",
-    "gemma2:9b",
+    "gpt-4o-mini",
 ]
 
 
+@pytest.mark.wip
 @pytest.mark.parametrize("model", models)
 def test_text_generation(model: str):
     #
@@ -21,12 +21,13 @@ def test_text_generation(model: str):
 
     # I limited output to single most likely token
     options = {
-        "top_k": 1,
-        "num_predict": 1,
+        "temperature": 0.0,
+        "top_p": 1.0,
+        "max_tokens": 1,
     }
 
-    # I packaged model and options into ollama generator
-    generator = partial(lmb.models.ollama, model=model, options=options)
+    # I packaged model and options into openai generator
+    generator = partial(lmb.models.openai, model=model, options=options)
 
     #
     # Whens

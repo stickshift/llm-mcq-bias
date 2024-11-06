@@ -5,8 +5,8 @@ import pytest
 import llm_mcq_bias as lmb
 
 models = [
-    "llama3.2:3b",
-    "gemma2:9b",
+    "meta-llama/Llama-3.2-3B-Instruct",
+    "google/gemma-2-9b-it",
 ]
 
 
@@ -21,12 +21,12 @@ def test_text_generation(model: str):
 
     # I limited output to single most likely token
     options = {
-        "top_k": 1,
-        "num_predict": 1,
+        "do_sample": False,
+        "max_new_tokens": 1,
     }
 
     # I packaged model and options into ollama generator
-    generator = partial(lmb.models.ollama, model=model, options=options)
+    generator = partial(lmb.models.hf, model=model, options=options)
 
     #
     # Whens

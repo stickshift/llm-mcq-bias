@@ -56,7 +56,7 @@ RM := rm -rf
 
 OUTPUT_DIRS :=
 
-BUILD_DIR := $(PROJECT_ROOT)/.build
+BUILD_DIR := .build
 OUTPUT_DIRS := $(OUTPUT_DIRS) $(BUILD_DIR)
 
 
@@ -162,6 +162,9 @@ $(MMLU_DATASET): $(MMLU_DATASET_SRC) | $(DATASETS_DIR)
 	touch $@
 
 datasets: $(DATASETS)
+	@echo Downloaded datasets $$(dirname $(DATASETS))
+	@echo
+
 PHONIES := $(PHONIES) datasets
 
 #-------------------------------------------------------------------------------

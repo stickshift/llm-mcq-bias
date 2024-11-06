@@ -10,8 +10,13 @@ requires-python = ">=3.12"
 
 dependencies = [
     "ipywidgets>=8.1.5",
+    "matplotlib>=3.9.2",
     "ollama>=0.3.3",
+    "openai>=1.53.0",
     "pandas>=2.2.3",
+    "rich>=13.9.4",
+    "seaborn>=0.13.2",
+    "stamina>=24.3.0",
     "torch>=2.5.1",
     "transformers>=4.46.1",
 ]
@@ -29,6 +34,7 @@ dev-dependencies = [
     "pytest-xdist>=3.6.1",
     "ruff>=0.7.0",
     "jupyterlab>=4.3.0",
+    "jupyterlab-spellchecker>=0.8.4",
 ]
 
 #-------------------------------------------------------------------------------
