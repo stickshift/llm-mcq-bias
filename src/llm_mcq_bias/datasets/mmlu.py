@@ -12,12 +12,12 @@ __all__ = [
     "evaluate_answer",
     "generate_prompt",
     "load_dataset",
-    "normalize_example_answers",
-    "normalize_question_answers",
+    "debias_example_answers",
+    "debias_question_answers",
     "swap_options",
 ]
 
-OPTIONS = {"A", "B", "C", "D"}
+OPTIONS = ["A", "B", "C", "D"]
 
 logger = logging.getLogger(__name__)
 
@@ -80,7 +80,7 @@ def swap_options(questions: DataFrame, option: str) -> DataFrame:
     return DataFrame(rows)
 
 
-def normalize_question_answers(questions: DataFrame):
+def debias_question_answers(questions: DataFrame):
     """Evenly distribute question answers across options."""
     chunk_size = len(OPTIONS)
 
@@ -101,8 +101,8 @@ def normalize_question_answers(questions: DataFrame):
     return normalized
 
 
-def normalize_example_answers(examples: DataFrame):
-    """Evenly distribute example answers across options."""
+def debias_example_answers(examples: DataFrame):
+    """Evenly distribute example answers across options for each category."""
     categories = examples.category.unique()
 
     # Select 4 examples per category

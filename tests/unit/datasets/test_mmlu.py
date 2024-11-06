@@ -7,7 +7,7 @@ from pandas.testing import assert_frame_equal
 import llm_mcq_bias as lmb
 
 
-def test_load_example_questions(datasets_path: Path):
+def test_load_examples(datasets_path: Path):
     #
     # Givens
     #
@@ -33,7 +33,7 @@ def test_load_example_questions(datasets_path: Path):
     assert np.all(questions.category.value_counts() == 5)
 
 
-def test_load_test_questions(datasets_path: Path):
+def test_load_questions(datasets_path: Path):
     #
     # Givens
     #
@@ -72,6 +72,86 @@ def test_load_test_questions(datasets_path: Path):
     # questions should not have any NaNs
     for column in questions.columns:
         assert questions[column].isna().sum() == 0
+
+
+def test_debias_examples(datasets_path: Path):
+    #
+    # Givens
+    #
+
+    # Path to mmlu dataset
+    dataset_path = datasets_path / "mmlu"
+
+    #
+    # Whens
+    #
+
+    # I load examples
+    examples = lmb.datasets.mmlu.load_dataset(dataset_path, segment="dev")
+
+    #
+    # Thens
+    #
+
+    # Answers should NOT be evenly distributed
+    for category in examples.category.unique():
+        distribution = examples[examples.category == category].answer.value_counts()
+        assert not (distribution == distribution.iloc[0]).all()
+
+    #
+    # Whens
+    #
+
+    # I debias examples
+    examples = lmb.datasets.mmlu.debias_example_answers(examples)
+
+    #
+    # Thens
+    #
+
+    # Answers should be evenly distributed
+    for category in examples.category.unique():
+        distribution = examples[examples.category == category].answer.value_counts()
+        assert (distribution == distribution.iloc[0]).all()
+
+
+def test_debias_questions(datasets_path: Path):
+    #
+    # Givens
+    #
+
+    # Path to mmlu dataset
+    dataset_path = datasets_path / "mmlu"
+
+    #
+    # Whens
+    #
+
+    # I load questions
+    questions = lmb.datasets.mmlu.load_dataset(dataset_path, segment="test")
+
+    #
+    # Thens
+    #
+
+    # Answers should NOT be evenly distributed
+    distribution = questions.answer.value_counts()
+    assert not (distribution == distribution.iloc[0]).all()
+
+    #
+    # Whens
+    #
+
+    # I debias questions
+    questions = lmb.datasets.mmlu.debias_question_answers(questions)
+
+    #
+    # Thens
+    #
+
+    # Answers should be evenly distributed
+    distribution = questions.answer.value_counts()
+    assert (distribution == distribution.iloc[0]).all()
 
 
 def test_generate_prompt(datasets_path: Path):
