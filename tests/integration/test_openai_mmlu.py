@@ -18,17 +18,21 @@ models = [
 ]
 
 
+@pytest.mark.wip
 @pytest.mark.parametrize("model", models)
 def test_mmlu(datasets_path: Path, model: str):
     #
     # Givens
     #
 
+    # Path to mmlu dataset
+    dataset_path = datasets_path / "mmlu"
+
     # I loaded example questions
-    examples = lmb.datasets.mmlu.load_dataset(datasets_path, segment="dev")
+    examples = lmb.datasets.mmlu.load_dataset(dataset_path, segment="dev")
 
     # I loaded test questions
-    questions = lmb.datasets.mmlu.load_dataset(datasets_path, segment="test")
+    questions = lmb.datasets.mmlu.load_dataset(dataset_path, segment="test")
 
     # Sample size is 20
     n_questions = 20

@@ -201,12 +201,19 @@ def test_golden_option(datasets_path: Path):
 
 def test_idempotent_datasets(datasets_path: Path):
     #
+    # Givens
+    #
+
+    # Path to mmlu dataset
+    dataset_path = datasets_path / "mmlu"
+
+    #
     # Whens
     #
 
     # I load mmlu dataset twice
-    dataset1 = lmb.datasets.mmlu.load_dataset(datasets_path)
-    dataset2 = lmb.datasets.mmlu.load_dataset(datasets_path)
+    dataset1 = lmb.datasets.mmlu.load_dataset(dataset_path)
+    dataset2 = lmb.datasets.mmlu.load_dataset(dataset_path)
 
     #
     # Thens

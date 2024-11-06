@@ -9,6 +9,7 @@ models = [
 ]
 
 
+@pytest.mark.wip
 @pytest.mark.parametrize("model", models)
 def test_text_generation(model: str):
     #
