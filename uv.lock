@@ -868,6 +868,19 @@ wheels = [
 ]
 
 [[package]]
+name = "jupyterlab-spellchecker"
+version = "0.8.4"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "jupyter-server" },
+    { name = "jupyterlab" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/97/74/7f05f8ee3c9cb47f4f52ea08e5a56cf8e4ed154a39472330435f977db178/jupyterlab_spellchecker-0.8.4.tar.gz", hash = "sha256:e0722f00c795e8b5d60655ed475dd91a67fe7180c32ac891a50f38c7abc7684b", size = 5390753 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/08/54/b3d575124fa9404ceef40728f205d033fe52cf417a2245c5d108afe728e8/jupyterlab_spellchecker-0.8.4-py3-none-any.whl", hash = "sha256:2701999d6a826e0a54a12fa41c60b9ffef220ee267e78fe20144423dbcc6d6d8", size = 5328613 },
+]
+
+[[package]]
 name = "jupyterlab-widgets"
 version = "3.0.13"
 source = { registry = "https://pypi.org/simple" }
@@ -936,6 +949,7 @@ dependencies = [
 [package.dev-dependencies]
 dev = [
     { name = "jupyterlab" },
+    { name = "jupyterlab-spellchecker" },
     { name = "pytest" },
     { name = "pytest-asyncio" },
     { name = "pytest-cov" },
@@ -961,6 +975,7 @@ requires-dist = [
 [package.metadata.requires-dev]
 dev = [
     { name = "jupyterlab", specifier = ">=4.3.0" },
+    { name = "jupyterlab-spellchecker", specifier = ">=0.8.4" },
     { name = "pytest", specifier = ">=8.3.3" },
     { name = "pytest-asyncio", specifier = ">=0.24.0" },
     { name = "pytest-cov", specifier = ">=5.0.0" },

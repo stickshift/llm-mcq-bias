@@ -34,6 +34,7 @@ dev-dependencies = [
     "pytest-xdist>=3.6.1",
     "ruff>=0.7.0",
     "jupyterlab>=4.3.0",
+    "jupyterlab-spellchecker>=0.8.4",
 ]
 
 #-------------------------------------------------------------------------------

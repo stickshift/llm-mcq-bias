@@ -1,6 +1,6 @@
 from concurrent.futures import ThreadPoolExecutor, as_completed
-import logging
 from functools import partial
+import logging
 from pathlib import Path
 from time import perf_counter_ns as timer
 
@@ -8,7 +8,6 @@ import pytest
 
 import llm_mcq_bias as lmb
 from llm_mcq_bias.datasets.mmlu import Evaluation
-
 
 logger = logging.getLogger(__name__)
 

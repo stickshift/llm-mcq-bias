@@ -9,7 +9,6 @@ import pytest
 import llm_mcq_bias as lmb
 from llm_mcq_bias.datasets.mmlu import Evaluation
 
-
 logger = logging.getLogger(__name__)
 
 models = [

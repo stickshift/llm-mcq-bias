@@ -4,9 +4,9 @@ from dotenv import load_dotenv
 import pytest
 
 __all__ = [
-    "project_path",
     "datasets_path",
     "project_env",
+    "project_path",
 ]
 
 

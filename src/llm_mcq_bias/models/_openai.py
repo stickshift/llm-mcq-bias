@@ -10,7 +10,7 @@ __all__ = [
 logger = logging.getLogger(__name__)
 
 
-@stamina.retry(on=RateLimitError, attempts=None, timeout=300)
+@stamina.retry(on=RateLimitError, attempts=None, timeout=300, wait_initial=1, wait_max=60)
 def openai(*, model: str, prompt: str, options: dict | None = None) -> str:
     # Defaults
     options = options if options is not None else {}

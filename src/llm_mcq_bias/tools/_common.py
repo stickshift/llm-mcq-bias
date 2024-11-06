@@ -60,9 +60,7 @@ def random_string(length: int | None = None):
     length = default_arg(length, 8)
 
     # Always prefix with a character to ensure value is a string
-    return (
-        random.choice(string.ascii_lowercase) + secrets.token_hex(int(length / 2))[1:]
-    )
+    return random.choice(string.ascii_lowercase) + secrets.token_hex(int(length / 2))[1:]
 
 
 @contextmanager

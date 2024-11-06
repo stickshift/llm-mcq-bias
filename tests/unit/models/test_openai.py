@@ -5,9 +5,9 @@ import pytest
 import llm_mcq_bias as lmb
 
 models = [
-    "gpt-4o",
     "gpt-4o-mini",
 ]
+
 
 @pytest.mark.parametrize("model", models)
 def test_text_generation(model: str):

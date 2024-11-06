@@ -10,7 +10,6 @@ logger = logging.getLogger(__name__)
 
 
 def ollama(*, model: str, prompt: str, options: dict | None = None) -> str:
-
     # Send request to ollama
     response = generate(
         model=model,

@@ -8,13 +8,13 @@ from pandas import DataFrame, Series
 
 __all__ = [
     "OPTIONS",
-    "load_dataset",
-    "swap_options",
-    "normalize_question_answers",
-    "normalize_example_answers",
-    "generate_prompt",
     "Evaluation",
     "evaluate_response",
+    "generate_prompt",
+    "load_dataset",
+    "normalize_example_answers",
+    "normalize_question_answers",
+    "swap_options",
 ]
 
 OPTIONS = {"A", "B", "C", "D"}
@@ -22,13 +22,20 @@ OPTIONS = {"A", "B", "C", "D"}
 logger = logging.getLogger(__name__)
 
 
+class Evaluation(StrEnum):
+    """Question evaluation."""
+
+    CORRECT = "correct"
+    INCORRECT = "incorrect"
+    ERROR = "error"
+
+
 def load_dataset(
-    datasets_path: Path,
+    dataset_path: Path,
     segment: str | None = None,
     golden_option: str | None = None,
 ) -> DataFrame:
     """Load MMLU questions from segment."""
-
     # Defaults
     segment = "test" if segment is None else segment
 
@@ -36,7 +43,7 @@ def load_dataset(
     column_names = ["question", "A", "B", "C", "D", "answer"]
 
     # Sort paths to ensure consistent order
-    paths = sorted([path for path in datasets_path.glob(f"mmlu/{segment}/*.csv")])
+    paths = sorted(path for path in dataset_path.glob(f"{segment}/*.csv"))
     for path in paths:
         df = pd.read_csv(path, names=column_names)
 
@@ -57,6 +64,7 @@ def load_dataset(
 
 
 def swap_options(questions: DataFrame, option: str) -> DataFrame:
+    """Swap answer and specified option."""
     # Validate options
     if option not in OPTIONS:
         raise ValueError(f"Invalid option: {option}")
@@ -84,9 +92,7 @@ def normalize_question_answers(questions: DataFrame):
     normalized = None
     segment_size = int(n_questions / chunk_size)
     for i, option in enumerate(OPTIONS):
-        segment = swap_options(
-            questions.iloc[i * segment_size : (i + 1) * segment_size], option
-        )
+        segment = swap_options(questions.iloc[i * segment_size : (i + 1) * segment_size], option)
         normalized = segment if normalized is None else pd.concat([normalized, segment])
 
     # Shuffle
@@ -108,12 +114,8 @@ def normalize_example_answers(examples: DataFrame):
         # Move 25% of answers to each option
         segment_size = 1
         for i, option in enumerate(OPTIONS):
-            segment = swap_options(
-                selection.iloc[i * segment_size : (i + 1) * segment_size], option
-            )
-            normalized = (
-                segment if normalized is None else pd.concat([normalized, segment])
-            )
+            segment = swap_options(selection.iloc[i * segment_size : (i + 1) * segment_size], option)
+            normalized = segment if normalized is None else pd.concat([normalized, segment])
 
     # Shuffle
     normalized = normalized.sample(frac=1).reset_index(drop=True)
@@ -123,7 +125,6 @@ def normalize_example_answers(examples: DataFrame):
 
 def generate_prompt(example_questions: DataFrame, mcq: Series):
     """Generate prompt for specified question."""
-
     # Select examples for category
     selected_examples = example_questions[example_questions.category == mcq.category]
 
@@ -147,32 +148,14 @@ def generate_prompt(example_questions: DataFrame, mcq: Series):
         )
 
     # Pose question
-    content += (
-        "Given the examples above, your task is to answer the following question.\n\n"
-    )
-    content += (
-        f"Question: {mcq.question}\n"
-        f"\n"
-        f"A) {mcq.A}\n"
-        f"B) {mcq.B}\n"
-        f"C) {mcq.C}\n"
-        f"D) {mcq.D}\n"
-        f"\n"
-        f"Answer: "
-    )
+    content += "Given the examples above, your task is to answer the following question.\n\n"
+    content += f"Question: {mcq.question}\n\nA) {mcq.A}\nB) {mcq.B}\nC) {mcq.C}\nD) {mcq.D}\n\nAnswer: "
 
     return content
 
 
-class Evaluation(StrEnum):
-    CORRECT = "correct"
-    INCORRECT = "incorrect"
-    ERROR = "error"
-
-
 def evaluate_response(mcq: Series, response: str) -> Evaluation:
     """Evaluate response for specified question."""
-
     try:
         # Strip text leading up to first { and after last }
         response = response[response.index("{") : response.rindex("}") + 1]

@@ -9,11 +9,18 @@ import llm_mcq_bias as lmb
 
 def test_load_example_questions(datasets_path: Path):
     #
+    # Givens
+    #
+
+    # Path to mmlu dataset
+    dataset_path = datasets_path / "mmlu"
+
+    #
     # Whens
     #
 
     # I load example questions
-    questions = lmb.datasets.mmlu.load_dataset(datasets_path, segment="dev")
+    questions = lmb.datasets.mmlu.load_dataset(dataset_path, segment="dev")
 
     #
     # Thens
@@ -28,11 +35,18 @@ def test_load_example_questions(datasets_path: Path):
 
 def test_load_test_questions(datasets_path: Path):
     #
+    # Givens
+    #
+
+    # Path to mmlu dataset
+    dataset_path = datasets_path / "mmlu"
+
+    #
     # Whens
     #
 
     # I load test questions
-    questions = lmb.datasets.mmlu.load_dataset(datasets_path, segment="test")
+    questions = lmb.datasets.mmlu.load_dataset(dataset_path, segment="test")
 
     #
     # Thens
@@ -65,11 +79,14 @@ def test_generate_prompt(datasets_path: Path):
     # Givens
     #
 
+    # Path to mmlu dataset
+    dataset_path = datasets_path / "mmlu"
+
     # I loaded example questions
-    example_questions = lmb.datasets.mmlu.load_dataset(datasets_path, segment="dev")
+    example_questions = lmb.datasets.mmlu.load_dataset(dataset_path, segment="dev")
 
     # I loaded test questions
-    test_questions = lmb.datasets.mmlu.load_dataset(datasets_path, segment="test")
+    test_questions = lmb.datasets.mmlu.load_dataset(dataset_path, segment="test")
 
     # I selected question 11776
     mcq = test_questions.loc[11776]
@@ -154,20 +171,21 @@ def test_golden_option(datasets_path: Path):
     # Givens
     #
 
+    # Path to mmlu dataset
+    dataset_path = datasets_path / "mmlu"
+
     # Option A
     golden_option = "A"
 
     # I loaded mmlu original dataset
-    dataset1 = lmb.datasets.mmlu.load_dataset(datasets_path)
+    dataset1 = lmb.datasets.mmlu.load_dataset(dataset_path)
 
     #
     # Whens
     #
 
     # I load mmlu dataset with golden option
-    dataset2 = lmb.datasets.mmlu.load_dataset(
-        datasets_path, golden_option=golden_option
-    )
+    dataset2 = lmb.datasets.mmlu.load_dataset(dataset_path, golden_option=golden_option)
 
     #
     # Thens
