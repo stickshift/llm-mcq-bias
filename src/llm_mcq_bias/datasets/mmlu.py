@@ -9,7 +9,7 @@ from pandas import DataFrame, Series
 __all__ = [
     "OPTIONS",
     "Evaluation",
-    "evaluate_response",
+    "evaluate_answer",
     "generate_prompt",
     "load_dataset",
     "normalize_example_answers",
@@ -123,10 +123,14 @@ def normalize_example_answers(examples: DataFrame):
     return normalized
 
 
-def generate_prompt(example_questions: DataFrame, mcq: Series):
+def generate_prompt(examples: DataFrame, mcq: Series, n_shots: int | None = None):
     """Generate prompt for specified question."""
     # Select examples for category
-    selected_examples = example_questions[example_questions.category == mcq.category]
+    selected_examples = examples[examples.category == mcq.category]
+
+    # Select n_shots if specified
+    if n_shots is not None:
+        selected_examples = selected_examples.sample(n=n_shots)
 
     # Start with examples
     content = (
@@ -154,14 +158,14 @@ def generate_prompt(example_questions: DataFrame, mcq: Series):
     return content
 
 
-def evaluate_response(mcq: Series, response: str) -> Evaluation:
+def evaluate_answer(mcq: Series, answer: str) -> Evaluation:
     """Evaluate response for specified question."""
     try:
         # Strip text leading up to first { and after last }
-        response = response[response.index("{") : response.rindex("}") + 1]
+        answer = answer[answer.index("{") : answer.rindex("}") + 1]
 
         # Parse answer
-        answer = json.loads(response)["answer"]
+        answer = json.loads(answer)["answer"]
         if answer not in OPTIONS:
             raise ValueError(f"Invalid answer: {answer}")
 

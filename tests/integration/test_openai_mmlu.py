@@ -69,7 +69,7 @@ def test_mmlu(datasets_path: Path, model: str):
         response = generator(prompt=prompt)
 
         # Evaluate response
-        return lmb.datasets.mmlu.evaluate_response(mcq, response)
+        return lmb.datasets.mmlu.evaluate_answer(mcq, response)
 
     futures = [executor.submit(process_mcq, mcq) for _, mcq in questions.iterrows()]
 
